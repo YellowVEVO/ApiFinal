@@ -27,7 +27,7 @@
         <th>Title</th>
         <th>Author</th>
         <th>Genre</th>
-        <th>Availability</th>
+        <th>Availablity</th>
       </tr>
     </thead>
     <tbody id="booksTable">
@@ -61,7 +61,7 @@
             <td>${book.title}</td>
             <td>${book.author}</td>
             <td>${book.genre}</td>
-            <td>${book.available ? 'Available' : 'Checked Out'}</td>
+            <td>${book.available}</td>
           `;
           booksTable.appendChild(row);
         });
