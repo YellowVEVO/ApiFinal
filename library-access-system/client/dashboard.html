@@ -120,7 +120,6 @@
 
         booksTable.innerHTML = ''; // Clear the table before populating
 
-        // Add Edit/Delete buttons only for admins
         books.forEach(book => {
           const row = document.createElement('tr');
           row.innerHTML = `
@@ -129,8 +128,13 @@
             <td>${book.genre}</td>
             <td>${book.available ? 'Yes' : 'No'}</td>
             <td>
-              ${userRole === 'admin' ? `<button onclick="editBook('${book._id}')">Edit</button>` : ''}
-              ${userRole === 'admin' ? `<button onclick="deleteBook('${book._id}')">Delete</button>` : ''}
+              ${userRole === 'admin' ? `
+                <button onclick="editBook('${book._id}')">Edit</button>
+                <button onclick="deleteBook('${book._id}')">Delete</button>
+              ` : ''}
+              ${userRole === 'member' ? `
+                <button onclick="rentBook('${book._id}')">Rent</button>
+              ` : ''}
             </td>
           `;
           booksTable.appendChild(row);
