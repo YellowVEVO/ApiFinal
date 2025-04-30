@@ -29,7 +29,7 @@
         <th>Author</th>
         <th>Genre</th>
         <th>Availability</th>
-        <th>Actions</th>
+        ${localStorage.getItem('role') === 'admin' ? '<th>Actions</th>' : ''}
       </tr>
     </thead>
     <tbody id="booksTable">
