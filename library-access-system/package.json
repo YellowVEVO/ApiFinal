@@ -1,0 +1,22 @@
+{
+  "name": "library-access-system",
+  "version": "1.0.0",
+  "description": "Restrict Library Access by IP Address",
+  "main": "server/app.js",
+  "scripts": {
+    "start": "node server/app.js",
+    "seed:users": "node server/seedUsers.js",
+    "seed:countries": "node server/seedCountries.js",
+    "seed:books": "node server/seedBooks.js"
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.0.3",
+    "request-ip": "^3.3.0"
+  }
+}

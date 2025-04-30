@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dashboard</h1>
+  <h2>Books in the Library</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Year</th>
+      </tr>
+    </thead>
+    <tbody id="booksTable">
+      <!-- Books will be dynamically inserted here -->
+    </tbody>
+  </table>
+
+  <script src="config.js"></script>
+  <script>
+    async function fetchBooks() {
+      try {
+        const response = await fetch(`${API_URL}/api/books`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}` // Include token if required
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch books');
+        }
+
+        const books = await response.json();
+        const booksTable = document.getElementById('booksTable');
+
+        // Populate the table with books
+        books.forEach(book => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${book.title}</td>
+            <td>${book.author}</td>
+            <td>${book.year}</td>
+          `;
+          booksTable.appendChild(row);
+        });
+      } catch (error) {
+        console.error('Error fetching books:', error);
+      }
+    }
+
+    // Fetch books when the page loads
+    fetchBooks();
+  </script>
+</body>
+</html>
