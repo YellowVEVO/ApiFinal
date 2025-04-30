@@ -34,27 +34,20 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
-  try
-  {
+  try {
     const user = await User.findOne({ username });
-    if (!user)
-    {
-      console.log("Login Failed: Username not found");
+    if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     const isMatch = await user.comparePassword(password);
-    if (!isMatch)
-    {
-      console.log("Login Failed: Password incorrect");
+    if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     let ip = requestIp.getClientIp(req);
-    
-    if (ip === '::1' || ip === '::ffff:127.0.0.1')
-    {
-     ip = '8.8.8.8';
+    if (ip === '::1' || ip === '::ffff:127.0.0.1') {
+      ip = '8.8.8.8';
     }
     const ipDetails = await getIPDetails(ip);
     const country = ipDetails.location.country_code2 || 'Unknown';
@@ -68,16 +61,15 @@ router.post('/login', async (req, res) => {
       accessGranted: accessGranted,
       timestamp: new Date()
     });
-    if (!accessGranted)
-    {
-      console.log(`Access Denied for IP: ${ip} (Country: ${country})`);
+
+    if (!accessGranted) {
       return res.status(403).json({ message: 'Access denied from your country' });
     }
-    const token = jwt.sign
-    (
+
+    const token = jwt.sign(
       { 
         id: user._id,
-        role: user.role
+        role: user.role // Include role in the token
       },
       process.env.JWT_SECRET,
       { 
@@ -85,11 +77,10 @@ router.post('/login', async (req, res) => {
       }
     );
 
-    res.json({ token });
+    // Include the role in the response
+    res.json({ token, role: user.role });
 
-  }
-  catch (error)
-  {
+  } catch (error) {
     console.error('Login error:', error.message);
     res.status(500).json({ message: 'Server error' });
   }
