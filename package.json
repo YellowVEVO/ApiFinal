@@ -4,10 +4,10 @@
   "description": "Restrict Library Access by IP Address",
   "main": "server/app.js",
   "scripts": {
-    "start": "node server/app.js",
-    "seed:users": "node server/seedUsers.js",
-    "seed:countries": "node server/seedCountries.js",
-    "seed:books": "node server/seedBooks.js"
+    "start": "node library-access-system/server/app.js",
+    "seed:users": "node library-access-system/server/seedUsers.js",
+    "seed:countries": "node library-access-system/server/seedCountries.js",
+    "seed:books": "node library-access-system/server/seedBooks.js"
   },
   "dependencies": {
     "axios": "^1.4.0",
