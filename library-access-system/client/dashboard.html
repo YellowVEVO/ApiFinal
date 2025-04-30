@@ -26,7 +26,7 @@
       <tr>
         <th>Title</th>
         <th>Author</th>
-        <th>Year</th>
+        <th>Genre</th>
       </tr>
     </thead>
     <tbody id="booksTable">
@@ -59,7 +59,7 @@
           row.innerHTML = `
             <td>${book.title}</td>
             <td>${book.author}</td>
-            <td>${book.year}</td>
+            <td>${book.genre}</td>
           `;
           booksTable.appendChild(row);
         });

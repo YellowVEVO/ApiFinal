@@ -67,7 +67,7 @@ npm start
 
 Server will run at:
 ```
-http://localhost:5000
+http://localhost:5001
 ```
 
 5. **Open the Frontend:**
