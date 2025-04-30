@@ -79,6 +79,7 @@
 
         const books = await response.json();
         const booksTable = document.getElementById('booksTable');
+        const userRole = localStorage.getItem('role'); // Store the role during login
 
         booksTable.innerHTML = ''; // Clear the table before populating
 
@@ -90,12 +91,15 @@
             <td>${book.genre}</td>
             <td>${book.available ? 'Yes' : 'No'}</td>
             <td>
-              <button onclick="editBook('${book._id}')">Edit</button>
-              <button onclick="deleteBook('${book._id}')">Delete</button>
+              ${userRole === 'admin' ? `<button onclick="editBook('${book._id}')">Edit</button>` : ''}
+              ${userRole === 'admin' ? `<button onclick="deleteBook('${book._id}')">Delete</button>` : ''}
             </td>
           `;
           booksTable.appendChild(row);
         });
+
+        // Show the "Add Book" button only for admins
+        document.getElementById('addBookButton').style.display = userRole === 'admin' ? 'block' : 'none';
       } catch (error) {
         console.error('Error fetching books:', error);
       }

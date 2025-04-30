@@ -4,7 +4,16 @@ const verifyToken = require('../utils/verifyToken');
 
 const router = express.Router();
 
-// Get all books
+// Middleware to check if the user is an admin
+function isAdmin(req, res, next) {
+  if (req.user && req.user.role === 'admin') {
+    next();
+  } else {
+    res.status(403).json({ message: 'Access denied: Admins only' });
+  }
+}
+
+// Get all books (accessible to all users)
 router.get('/', async (req, res) => {
   try {
     const books = await Book.find();
@@ -15,11 +24,7 @@ router.get('/', async (req, res) => {
 });
 
 // Add a new book (admin only)
-router.post('/', verifyToken, async (req, res) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ message: 'Access denied' });
-  }
-
+router.post('/', verifyToken, isAdmin, async (req, res) => {
   const { title, author, genre, available } = req.body;
 
   try {
@@ -32,11 +37,7 @@ router.post('/', verifyToken, async (req, res) => {
 });
 
 // Update a book (admin only)
-router.put('/:id', verifyToken, async (req, res) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ message: 'Access denied' });
-  }
-
+router.put('/:id', verifyToken, isAdmin, async (req, res) => {
   const { id } = req.params;
   const { title, author, genre, available } = req.body;
 
@@ -56,11 +57,7 @@ router.put('/:id', verifyToken, async (req, res) => {
 });
 
 // Delete a book (admin only)
-router.delete('/:id', verifyToken, async (req, res) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ message: 'Access denied' });
-  }
-
+router.delete('/:id', verifyToken, isAdmin, async (req, res) => {
   const { id } = req.params;
 
   try {
