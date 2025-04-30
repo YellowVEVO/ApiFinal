@@ -1,1 +1,1 @@
-const API_URL = 'http://localhost:5001';
+const API_URL = 'https://apifinal-1pk9.onrender.com';
