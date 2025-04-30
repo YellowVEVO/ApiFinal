@@ -47,11 +47,10 @@ npm install
 3. **Create `.env` file inside `/server` folder:**
 
 ```bash
-PORT=3000
 MONGODB_URI=your_mongodb_atlas_or_local_uri
 JWT_SECRET=your_jwt_secret
 GEOLOCATION_API_KEY=your_ipgeolocation_api_key
-PORT=5000
+PORT=5001
 ```
 
 **Replace**:

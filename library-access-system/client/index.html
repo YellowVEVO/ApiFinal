@@ -40,6 +40,7 @@
         msgEl.textContent = 'Login successful!';
         localStorage.setItem('token', data.token);
         localStorage.setItem('role', data.role); // Store the user's role
+        console.log('User Role:', data.role);
 
         // Redirect to another page (e.g., dashboard.html)
         window.location.href = 'dashboard.html';
