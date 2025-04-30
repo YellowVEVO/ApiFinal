@@ -37,6 +37,12 @@
     </tbody>
   </table>
 
+  <!-- Add buttons for admin actions -->
+  <div id="adminActions" style="display: none;">
+    <button id="addRestrictedCountryButton">Add Restricted Country</button>
+    <button id="viewAccessLogButton">View Access Log</button>
+  </div>
+
   <!-- Add Book Modal -->
   <div id="addBookModal" style="display: none;">
     <h3>Add Book</h3>
@@ -59,6 +65,37 @@
       <button type="submit">Add Book</button>
       <button type="button" id="closeAddBookModal">Cancel</button>
     </form>
+  </div>
+
+  <!-- Add Restricted Country Modal -->
+  <div id="addRestrictedCountryModal" style="display: none;">
+    <h3>Add Restricted Country</h3>
+    <form id="addRestrictedCountryForm">
+      <label for="countryCode">Country Code:</label>
+      <input type="text" id="countryCode" name="countryCode" required>
+      <br>
+      <button type="submit">Add Country</button>
+      <button type="button" id="closeAddRestrictedCountryModal">Cancel</button>
+    </form>
+  </div>
+
+  <!-- Access Log Modal -->
+  <div id="accessLogModal" style="display: none;">
+    <h3>Access Log</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>IP Address</th>
+          <th>Country</th>
+          <th>Access Granted</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
+      <tbody id="accessLogTable">
+        <!-- Access log entries will be dynamically inserted here -->
+      </tbody>
+    </table>
+    <button id="closeAccessLogModal">Close</button>
   </div>
 
   <script src="config.js"></script>
@@ -168,8 +205,86 @@
 
     document.getElementById('addBookForm').addEventListener('submit', addBook);
 
+    document.getElementById('addRestrictedCountryButton').addEventListener('click', () => {
+      document.getElementById('addRestrictedCountryModal').style.display = 'block';
+    });
+
+    document.getElementById('closeAddRestrictedCountryModal').addEventListener('click', () => {
+      document.getElementById('addRestrictedCountryModal').style.display = 'none';
+    });
+
+    document.getElementById('addRestrictedCountryForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const countryCode = document.getElementById('countryCode').value;
+
+      try {
+        const response = await fetch(`${API_URL}/api/admin/restrict`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify({ code: countryCode })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to add restricted country');
+        }
+
+        alert(`Country ${countryCode} has been added to the restricted list.`);
+        document.getElementById('addRestrictedCountryModal').style.display = 'none';
+      } catch (error) {
+        console.error('Error adding restricted country:', error);
+        alert('An error occurred while adding the restricted country.');
+      }
+    });
+
+    document.getElementById('viewAccessLogButton').addEventListener('click', async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/admin/viewlogs`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch access logs');
+        }
+
+        const logs = await response.json();
+        const accessLogTable = document.getElementById('accessLogTable');
+        accessLogTable.innerHTML = ''; // Clear the table before populating
+
+        logs.forEach(log => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${log.ipAddress}</td>
+            <td>${log.country}</td>
+            <td>${log.accessGranted ? 'Yes' : 'No'}</td>
+            <td>${new Date(log.timestamp).toLocaleString()}</td>
+          `;
+          accessLogTable.appendChild(row);
+        });
+
+        document.getElementById('accessLogModal').style.display = 'block';
+      } catch (error) {
+        console.error('Error fetching access logs:', error);
+        alert('An error occurred while fetching the access logs.');
+      }
+    });
+
+    document.getElementById('closeAccessLogModal').addEventListener('click', () => {
+      document.getElementById('accessLogModal').style.display = 'none';
+    });
+
     // Fetch books when the page loads
     fetchBooks();
+
+    const userRole = localStorage.getItem('role'); // Retrieve the role from localStorage
+
+    // Show admin actions only for admins
+    document.getElementById('adminActions').style.display = userRole === 'admin' ? 'block' : 'none';
   </script>
 </body>
 </html>
