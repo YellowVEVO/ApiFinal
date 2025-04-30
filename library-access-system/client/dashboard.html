@@ -79,10 +79,11 @@
 
         const books = await response.json();
         const booksTable = document.getElementById('booksTable');
-        const userRole = localStorage.getItem('role'); // Store the role during login
+        const userRole = localStorage.getItem('role'); // Retrieve the role from localStorage
 
         booksTable.innerHTML = ''; // Clear the table before populating
 
+        // Add Edit/Delete buttons only for admins
         books.forEach(book => {
           const row = document.createElement('tr');
           row.innerHTML = `
